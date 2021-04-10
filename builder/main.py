@@ -73,7 +73,7 @@ env.Replace(
 )
 
 env.Append(
-    ASFLAGS=env.get("CCFLAGS", [])[:],
+    ASFLAGS=["-l", "-s"],
 
     CFLAGS=[
         "--std-sdcc11"
@@ -163,7 +163,10 @@ if upload_protocol == "stcgal":
 
 # custom upload tool
 elif upload_protocol == "custom":
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+    upload_actions = [
+        env.VerboseAction(env.AutodetectUploadPort,
+                          "Looking for upload port..."),
+        env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
 else:
     sys.stderr.write("Warning! Unknown upload protocol %s\n" % upload_protocol)
